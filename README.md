@@ -87,15 +87,12 @@ FocusQuest/
 
 拿到项目文件夹后，在终端中依次执行以下命令：
 
+> 注意：以下命令需要在 `FocusQuest` 文件夹**同一级目录**下运行（例如 `FocusQuest` 放在桌面，就在桌面的终端路径下运行）。
+
 ```bash
-# 1. 进入项目文件夹
-cd FocusQuest
-
-# 2. 安装依赖
-pip install -r requirements.txt
-
-# 3. 进入 backend 目录并启动服务器
-cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+cd FocusQuest && pip install -r requirements.txt
+cd backend
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 浏览器打开 **http://localhost:8000** 即可使用。
@@ -119,6 +116,27 @@ cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
 | `GET` | `/dashboard` | 仪表盘数据 |
 | `GET` | `/profile` | 个人主页数据 |
 | `GET` | `/health` | 健康检查 |
+
+---
+
+## 常见问题
+
+### pip install 出现大量 retrying / proxy 警告
+
+`uvicorn[standard]` 会尝试下载 `httptools` 等可选依赖，部分网络环境会被代理拦截。本项目已将依赖改为不含 `[standard]` 的基础版本，功能完全不受影响。
+
+```requirements.txt
+fastapi>=0.110
+uvicorn>=0.27
+pydantic>=2.0
+```
+
+### 端口 8000 已被占用
+
+```bash
+lsof -ti :8000 | xargs kill
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
 
 ---
 
